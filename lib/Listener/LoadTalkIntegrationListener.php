@@ -45,7 +45,8 @@ class LoadTalkIntegrationListener implements IEventListener
             return;
         }
 
-        // Load our Talk integration script
+        // Load our Talk integration script (vendors must be loaded first)
+        Util::addScript(Application::APP_ID, 'federatedtalklink-vendors');
         Util::addScript(Application::APP_ID, 'federatedtalklink-talk-integration');
     }
 }
