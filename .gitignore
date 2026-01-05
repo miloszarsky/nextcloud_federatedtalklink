@@ -1,0 +1,36 @@
+# Dependencies
+/node_modules/
+/vendor/
+
+# Build output
+/js/*.js
+/js/*.js.map
+/js/*.js.LICENSE.txt
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Composer
+composer.lock
+
+# NPM
+package-lock.json
+
+# PHPUnit
+.phpunit.cache/
+.phpunit.result.cache
+/build/
+
+# Testing
+/coverage/
+
+# Logs
+*.log

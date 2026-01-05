@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<info xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
+    <id>federatedtalklink</id>
+    <name>Federated Talk Link</name>
+    <summary>Generate federated links for Nextcloud Talk rooms</summary>
+    <description><![CDATA[
+# Federated Talk Link
+
+This app allows you to generate federated links to Nextcloud Talk rooms hosted on external Nextcloud servers.
+
+## Features
+
+- Query external Nextcloud Talk servers to find rooms by name
+- Generate direct call links for federated access
+- Admin settings to configure external server credentials
+- Integration with Nextcloud Talk call settings
+
+## Configuration
+
+1. Go to Admin Settings > Federated Talk Link
+2. Configure the external server URL
+3. Add authentication credentials
+4. Set the target Nextcloud URL for generated links
+
+## Usage
+
+Once configured, you can generate federated links by providing the room name. The app will query the external server and return a direct link to the call.
+    ]]></description>
+    <version>1.0.0</version>
+    <licence>agpl</licence>
+    <author mail="admin@example.com">Your Name</author>
+    <namespace>FederatedTalkLink</namespace>
+    <category>integration</category>
+    <category>communication</category>
+    <bugs>https://github.com/yourusername/federatedtalklink/issues</bugs>
+    <repository type="git">https://github.com/yourusername/federatedtalklink.git</repository>
+    <screenshot>https://raw.githubusercontent.com/yourusername/federatedtalklink/main/img/screenshot.png</screenshot>
+
+    <dependencies>
+        <nextcloud min-version="27" max-version="30"/>
+        <php min-version="8.0" max-version="8.3"/>
+    </dependencies>
+
+    <background-jobs>
+    </background-jobs>
+
+    <settings>
+        <admin>OCA\FederatedTalkLink\Settings\AdminSettings</admin>
+        <admin-section>OCA\FederatedTalkLink\Settings\AdminSection</admin-section>
+    </settings>
+
+    <navigations>
+    </navigations>
+</info>

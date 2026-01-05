@@ -1,0 +1,64 @@
+{
+    "name": "federatedtalklink",
+    "version": "1.0.0",
+    "description": "Generate federated links for Nextcloud Talk rooms",
+    "main": "src/main.js",
+    "scripts": {
+        "build": "NODE_ENV=production webpack --config webpack.config.js",
+        "dev": "NODE_ENV=development webpack --config webpack.config.js",
+        "watch": "NODE_ENV=development webpack --watch --config webpack.config.js",
+        "lint": "eslint --ext .js,.vue src",
+        "lint:fix": "eslint --fix --ext .js,.vue src",
+        "stylelint": "stylelint src/**/*.vue src/**/*.scss css/**/*.scss",
+        "stylelint:fix": "stylelint --fix src/**/*.vue src/**/*.scss css/**/*.scss"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/yourusername/federatedtalklink.git"
+    },
+    "keywords": [
+        "nextcloud",
+        "talk",
+        "federation",
+        "link"
+    ],
+    "author": "Your Name",
+    "license": "AGPL-3.0-or-later",
+    "dependencies": {
+        "@nextcloud/axios": "^2.4.0",
+        "@nextcloud/dialogs": "^5.0.0",
+        "@nextcloud/initial-state": "^2.1.0",
+        "@nextcloud/router": "^3.0.0",
+        "@nextcloud/vue": "^8.0.0",
+        "vue": "^3.3.0",
+        "vue-material-design-icons": "^5.2.0"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.23.0",
+        "@babel/preset-env": "^7.23.0",
+        "@nextcloud/babel-config": "^1.0.0",
+        "@nextcloud/browserslist-config": "^3.0.0",
+        "@nextcloud/eslint-config": "^8.3.0",
+        "@nextcloud/stylelint-config": "^2.4.0",
+        "@nextcloud/webpack-vue-config": "^6.0.0",
+        "@vue/compiler-sfc": "^3.3.0",
+        "babel-loader": "^9.1.0",
+        "css-loader": "^6.8.0",
+        "eslint": "^8.50.0",
+        "eslint-webpack-plugin": "^4.0.0",
+        "sass": "^1.69.0",
+        "sass-loader": "^13.3.0",
+        "style-loader": "^3.3.0",
+        "stylelint": "^15.10.0",
+        "vue-loader": "^17.3.0",
+        "webpack": "^5.88.0",
+        "webpack-cli": "^5.1.0"
+    },
+    "browserslist": [
+        "extends @nextcloud/browserslist-config"
+    ],
+    "engines": {
+        "node": "^20.0.0",
+        "npm": "^10.0.0"
+    }
+}

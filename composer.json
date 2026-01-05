@@ -1,0 +1,44 @@
+{
+    "name": "yourusername/federatedtalklink",
+    "description": "Generate federated links for Nextcloud Talk rooms",
+    "type": "project",
+    "license": "AGPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Your Name",
+            "email": "admin@example.com"
+        }
+    ],
+    "require": {
+        "php": "^8.0"
+    },
+    "require-dev": {
+        "nextcloud/ocp": "^27.0 || ^28.0 || ^29.0 || ^30.0",
+        "phpunit/phpunit": "^10.0",
+        "psalm/phar": "^5.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "OCA\\FederatedTalkLink\\": "lib/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "OCA\\FederatedTalkLink\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "lint": "find . -name '*.php' -not -path './vendor/*' -print0 | xargs -0 -n1 php -l",
+        "cs:check": "php-cs-fixer fix --dry-run --diff",
+        "cs:fix": "php-cs-fixer fix",
+        "psalm": "psalm --no-cache",
+        "test": "phpunit --configuration phpunit.xml"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "classmap-authoritative": true,
+        "platform": {
+            "php": "8.0"
+        }
+    }
+}
