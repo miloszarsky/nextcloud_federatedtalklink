@@ -14,8 +14,8 @@ declare(strict_types=1);
 /** @var array $_ */
 $settings = $_['settings'] ?? [];
 
+\OCP\Util::addScript('federatedtalklink', 'federatedtalklink-vendors');
 \OCP\Util::addScript('federatedtalklink', 'federatedtalklink-admin-settings');
-\OCP\Util::addStyle('federatedtalklink', 'admin-settings');
 ?>
 
 <div id="app-content">

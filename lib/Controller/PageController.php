@@ -49,9 +49,9 @@ class PageController extends Controller
             ]
         );
 
-        // Load JavaScript and CSS
+        // Load JavaScript (styles are bundled in JS via webpack)
+        Util::addScript(Application::APP_ID, 'federatedtalklink-vendors');
         Util::addScript(Application::APP_ID, 'federatedtalklink-main');
-        Util::addStyle(Application::APP_ID, 'style');
 
         return new TemplateResponse(
             Application::APP_ID,
