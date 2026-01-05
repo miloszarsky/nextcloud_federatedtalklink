@@ -13,41 +13,15 @@ A Nextcloud app that generates federated links to Talk rooms hosted on external 
 
 - Nextcloud 27 - 30
 - PHP 8.1+
-- Node.js 20+
-- npm 10+
 
 ## Deployment
 
-### Option 1: From Source
+### Quick Install (No Build Tools Required)
 
 1. **Clone the repository** into your Nextcloud apps directory:
    ```bash
    cd /var/www/nextcloud/apps
    git clone https://github.com/miloszarsky/nextcloud_federatedtalklink.git federatedtalklink
-   cd federatedtalklink
-   ```
-
-2. **Install PHP dependencies**:
-   ```bash
-   composer install --no-dev --ignore-platform-reqs
-   ```
-
-3. **Install JavaScript dependencies and build**:
-   ```bash
-   npm install --legacy-peer-deps
-   npm run build
-   ```
-
-4. **Enable the app**:
-   ```bash
-   sudo -u www-data php /var/www/nextcloud/occ app:enable federatedtalklink
-   ```
-
-### Option 2: Copy Pre-built App
-
-1. **Copy the app** to your Nextcloud apps directory:
-   ```bash
-   cp -r /path/to/federatedtalklink /var/www/nextcloud/apps/
    ```
 
 2. **Set proper ownership**:
@@ -59,6 +33,8 @@ A Nextcloud app that generates federated links to Talk rooms hosted on external 
    ```bash
    sudo -u www-data php /var/www/nextcloud/occ app:enable federatedtalklink
    ```
+
+That's it! All built files are included in the repository.
 
 ## Configuration
 
@@ -118,46 +94,32 @@ curl -u username:password \
   -H "Accept: application/json"
 ```
 
-## Development
-
-### Build for development (with source maps)
-
-```bash
-npm run dev
-```
-
-### Watch mode (auto-rebuild on changes)
-
-```bash
-npm run watch
-```
-
-### Production build
-
-```bash
-npm run build
-```
-
 ## Updating
 
-1. Pull the latest changes:
-   ```bash
-   cd /var/www/nextcloud/apps/federatedtalklink
-   git pull
-   ```
+```bash
+cd /var/www/nextcloud/apps/federatedtalklink
+git pull
+sudo -u www-data php /var/www/nextcloud/occ app:disable federatedtalklink
+sudo -u www-data php /var/www/nextcloud/occ app:enable federatedtalklink
+```
 
-2. Rebuild if needed:
-   ```bash
-   composer install --no-dev --ignore-platform-reqs
-   npm install --legacy-peer-deps
-   npm run build
-   ```
+## Development
 
-3. Reload the app:
-   ```bash
-   sudo -u www-data php /var/www/nextcloud/occ app:disable federatedtalklink
-   sudo -u www-data php /var/www/nextcloud/occ app:enable federatedtalklink
-   ```
+For development, you need Node.js 20+ and npm 10+:
+
+```bash
+# Install dependencies
+npm install --legacy-peer-deps
+
+# Build for development (with source maps)
+npm run dev
+
+# Watch mode (auto-rebuild on changes)
+npm run watch
+
+# Production build
+npm run build
+```
 
 ## License
 
