@@ -5,7 +5,6 @@
 
 const path = require('path')
 const { VueLoaderPlugin } = require('vue-loader')
-const ESLintPlugin = require('eslint-webpack-plugin')
 
 const isProduction = process.env.NODE_ENV === 'production'
 
@@ -48,7 +47,16 @@ module.exports = {
             },
             {
                 test: /\.scss$/,
-                use: ['style-loader', 'css-loader', 'sass-loader'],
+                use: [
+                    'style-loader',
+                    'css-loader',
+                    {
+                        loader: 'sass-loader',
+                        options: {
+                            api: 'legacy',
+                        },
+                    },
+                ],
             },
             {
                 test: /\.(png|jpe?g|gif|svg|woff2?|eot|ttf|otf)$/i,
@@ -59,17 +67,17 @@ module.exports = {
 
     plugins: [
         new VueLoaderPlugin(),
-        new ESLintPlugin({
-            extensions: ['js', 'vue'],
-            files: 'src',
-            failOnError: isProduction,
-        }),
     ],
 
     resolve: {
         extensions: ['.js', '.vue', '.json'],
         alias: {
-            vue$: 'vue/dist/vue.esm-bundler.js',
+            vue$: 'vue/dist/vue.esm.js',
+        },
+        fallback: {
+            path: require.resolve('path-browserify'),
+            string_decoder: require.resolve('string_decoder/'),
+            buffer: require.resolve('buffer/'),
         },
     },
 

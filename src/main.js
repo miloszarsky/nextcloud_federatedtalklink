@@ -3,8 +3,10 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { createApp } from 'vue'
+import Vue from 'vue'
 import App from './views/App.vue'
 
-const app = createApp(App)
-app.mount('#federatedtalklink-app')
+Vue.mixin({ methods: { t, n } })
+
+const View = Vue.extend(App)
+new View().$mount('#federatedtalklink-app')
