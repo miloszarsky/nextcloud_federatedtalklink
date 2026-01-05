@@ -1,11 +1,5 @@
-# Dependencies
+# Dependencies (keep node_modules ignored, vendor is committed)
 /node_modules/
-/vendor/
-
-# Build output
-/js/*.js
-/js/*.js.map
-/js/*.js.LICENSE.txt
 
 # IDE and editor files
 .idea/
@@ -17,9 +11,6 @@
 # OS files
 .DS_Store
 Thumbs.db
-
-# Composer
-composer.lock
 
 # NPM
 package-lock.json
