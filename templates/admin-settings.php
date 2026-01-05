@@ -13,8 +13,8 @@ declare(strict_types=1);
  * This template serves as the mounting point for the Vue.js admin settings component
  */
 
+\OCP\Util::addScript('federatedtalklink', 'federatedtalklink-vendors');
 \OCP\Util::addScript('federatedtalklink', 'federatedtalklink-admin-settings');
-\OCP\Util::addStyle('federatedtalklink', 'admin-settings');
 ?>
 
 <div id="federatedtalklink-admin-settings"></div>

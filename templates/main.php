@@ -12,6 +12,9 @@ declare(strict_types=1);
  *
  * This template serves as the mounting point for the Vue.js application
  */
+
+\OCP\Util::addScript('federatedtalklink', 'federatedtalklink-vendors');
+\OCP\Util::addScript('federatedtalklink', 'federatedtalklink-main');
 ?>
 
 <div id="federatedtalklink-app"></div>
