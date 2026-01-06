@@ -35,35 +35,58 @@ class ApiController extends OCSController
     }
 
     /**
-     * Generate a federated link for a room by name
+     * Generate a federated link for a room
      *
-     * @param string $roomName The name of the room
+     * Search priority (when searchBy is not specified):
+     * 1. token - unique room identifier (most specific)
+     * 2. objectId - for file/object-linked rooms
+     * 3. name - internal room name
+     * 4. displayName - user-visible name
+     *
+     * @param string $roomName The room identifier (token, name, displayName, or objectId)
+     * @param string $searchBy Force search by specific field: 'token', 'name', 'displayName', 'objectId'
      * @return DataResponse
      */
     #[NoAdminRequired]
-    public function generateLink(string $roomName = ''): DataResponse
+    public function generateLink(string $roomName = '', string $searchBy = ''): DataResponse
     {
         $roomName = trim($roomName);
+        $searchBy = trim($searchBy);
 
         if (empty($roomName)) {
             return new DataResponse(
-                ['error' => 'Room name is required'],
+                ['error' => 'Room identifier is required. Use token, name, displayName, or objectId.'],
                 Http::STATUS_BAD_REQUEST
             );
         }
 
-        $result = $this->federatedLinkService->generateFederatedLink($roomName);
+        // Validate searchBy if provided
+        $validSearchFields = ['token', 'name', 'displayName', 'objectId', ''];
+        if (!in_array($searchBy, $validSearchFields)) {
+            return new DataResponse(
+                ['error' => "Invalid searchBy value. Valid options: token, name, displayName, objectId"],
+                Http::STATUS_BAD_REQUEST
+            );
+        }
+
+        $searchByParam = !empty($searchBy) ? $searchBy : null;
+        $result = $this->federatedLinkService->generateFederatedLink($roomName, $searchByParam);
 
         if (!$result['success']) {
-            return new DataResponse(
-                ['error' => $result['error']],
-                Http::STATUS_NOT_FOUND
-            );
+            $response = ['error' => $result['error']];
+
+            // Include available rooms if room not found
+            if (isset($result['availableRooms'])) {
+                $response['availableRooms'] = $result['availableRooms'];
+            }
+
+            return new DataResponse($response, Http::STATUS_NOT_FOUND);
         }
 
         return new DataResponse([
             'link' => $result['link'],
             'token' => $result['token'],
+            'joined' => $result['joined'] ?? false,
             'roomInfo' => $result['roomInfo'] ?? null,
         ]);
     }
@@ -71,7 +94,7 @@ class ApiController extends OCSController
     /**
      * Search for rooms on the external server
      *
-     * @param string $search Optional search term
+     * @param string $search Optional search term (searches in displayName, name, token, objectId, description)
      * @return DataResponse
      */
     #[NoAdminRequired]
