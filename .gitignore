@@ -13,7 +13,7 @@
 Thumbs.db
 
 # NPM
-package-lock.json
+# package-lock.json is committed for reproducible builds
 
 # PHPUnit
 .phpunit.cache/
