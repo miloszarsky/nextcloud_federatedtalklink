@@ -1,0 +1,111 @@
+name: Build and Release
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    tags:
+      - 'v*'
+  pull_request:
+    branches:
+      - main
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get app info
+        id: app_info
+        run: |
+          APP_ID=$(grep -oP '(?<=<id>)[^<]+' appinfo/info.xml)
+          APP_VERSION=$(grep -oP '(?<=<version>)[^<]+' appinfo/info.xml)
+          echo "app_id=$APP_ID" >> $GITHUB_OUTPUT
+          echo "app_version=$APP_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build frontend
+        run: npm run build
+
+      - name: Create app package
+        run: |
+          # Create temp directory for packaging
+          mkdir -p /tmp/build
+
+          # Copy app files (excluding dev files)
+          rsync -av --progress . /tmp/build/${{ steps.app_info.outputs.app_id }} \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='node_modules' \
+            --exclude='src' \
+            --exclude='tests' \
+            --exclude='.gitignore' \
+            --exclude='package-lock.json' \
+            --exclude='package.json' \
+            --exclude='webpack.config.js' \
+            --exclude='babel.config.js' \
+            --exclude='.eslintrc.js' \
+            --exclude='stylelint.config.js' \
+            --exclude='composer.json' \
+            --exclude='composer.lock' \
+            --exclude='*.md' \
+            --exclude='.php-cs-fixer.dist.php' \
+            --exclude='Makefile' \
+            --exclude='krankerl.toml'
+
+          # Create zip file
+          cd /tmp/build
+          zip -r ${{ steps.app_info.outputs.app_id }}-${{ steps.app_info.outputs.app_version }}.zip ${{ steps.app_info.outputs.app_id }}
+          mv *.zip $GITHUB_WORKSPACE/
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.app_info.outputs.app_id }}-${{ steps.app_info.outputs.app_version }}
+          path: ${{ steps.app_info.outputs.app_id }}-${{ steps.app_info.outputs.app_version }}.zip
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get app info
+        id: app_info
+        run: |
+          APP_ID=$(grep -oP '(?<=<id>)[^<]+' appinfo/info.xml)
+          APP_VERSION=$(grep -oP '(?<=<version>)[^<]+' appinfo/info.xml)
+          echo "app_id=$APP_ID" >> $GITHUB_OUTPUT
+          echo "app_version=$APP_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ steps.app_info.outputs.app_id }}-${{ steps.app_info.outputs.app_version }}
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ${{ steps.app_info.outputs.app_id }}-${{ steps.app_info.outputs.app_version }}.zip
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
