@@ -57,5 +57,12 @@ return [
             'url' => '/api/v1/settings',
             'verb' => 'GET',
         ],
+
+        // OCS API endpoint to send link by email
+        [
+            'name' => 'api#sendEmail',
+            'url' => '/api/v1/email',
+            'verb' => 'POST',
+        ],
     ],
 ];

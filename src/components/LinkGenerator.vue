@@ -61,6 +61,28 @@
 					</NcButton>
 				</div>
 			</div>
+
+			<div class="email-send">
+				<label>Send Link by Email:</label>
+				<div class="email-container">
+					<NcTextField
+						v-model="emailAddress"
+						:disabled="sendingEmail"
+						placeholder="Enter email address..."
+						type="email"
+						@keyup.enter="sendEmail" />
+					<NcButton
+						type="primary"
+						:disabled="!emailAddress || sendingEmail"
+						@click="sendEmail">
+						<template #icon>
+							<EmailOutline v-if="!sendingEmail" :size="20" />
+							<NcLoadingIcon v-else :size="20" />
+						</template>
+						{{ sendingEmail ? 'Sending...' : 'Send Email' }}
+					</NcButton>
+				</div>
+			</div>
 		</div>
 
 		<div class="link-generator__rooms">
@@ -114,6 +136,7 @@ import ContentCopy from 'vue-material-design-icons/ContentCopy.vue'
 import OpenInNew from 'vue-material-design-icons/OpenInNew.vue'
 import Refresh from 'vue-material-design-icons/Refresh.vue'
 import ForumOutline from 'vue-material-design-icons/ForumOutline.vue'
+import EmailOutline from 'vue-material-design-icons/EmailOutline.vue'
 
 export default {
 	name: 'LinkGenerator',
@@ -129,6 +152,7 @@ export default {
 		OpenInNew,
 		Refresh,
 		ForumOutline,
+		EmailOutline,
 	},
 
 	data() {
@@ -140,6 +164,8 @@ export default {
 			error: '',
 			result: null,
 			rooms: [],
+			emailAddress: '',
+			sendingEmail: false,
 		}
 	},
 
@@ -231,6 +257,41 @@ export default {
 
 			window.open(this.result.link, '_blank')
 		},
+
+		async sendEmail() {
+			if (!this.emailAddress || !this.result?.link) {
+				return
+			}
+
+			this.sendingEmail = true
+
+			try {
+				const response = await axios.post(
+					generateOcsUrl('/apps/federatedtalklink/api/v1/email'),
+					{
+						email: this.emailAddress,
+						link: this.result.link,
+						roomName: this.result.roomInfo?.name || '',
+					}
+				)
+
+				const data = response.data.ocs?.data
+				if (data?.message) {
+					showSuccess(data.message)
+					this.emailAddress = ''
+				} else {
+					showSuccess('Email sent successfully!')
+					this.emailAddress = ''
+				}
+			} catch (error) {
+				const errorMessage = error.response?.data?.ocs?.data?.error
+					|| error.message
+					|| 'Failed to send email'
+				showError(errorMessage)
+			} finally {
+				this.sendingEmail = false
+			}
+		},
 	},
 }
 </script>
@@ -285,6 +346,28 @@ export default {
 					background: var(--color-background-dark);
 					font-family: monospace;
 					font-size: 13px;
+				}
+			}
+		}
+
+		.email-send {
+			margin-top: 20px;
+			padding-top: 20px;
+			border-top: 1px solid var(--color-border);
+
+			label {
+				display: block;
+				font-weight: 600;
+				margin-bottom: 5px;
+			}
+
+			.email-container {
+				display: flex;
+				gap: 10px;
+				align-items: flex-end;
+
+				> :first-child {
+					flex: 1;
 				}
 			}
 		}

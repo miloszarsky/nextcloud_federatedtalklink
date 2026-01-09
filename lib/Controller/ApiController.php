@@ -151,4 +151,50 @@ class ApiController extends OCSController
 
         return new DataResponse($settings);
     }
+
+    /**
+     * Send a federated link by email
+     *
+     * @param string $email Recipient email address
+     * @param string $link The federated Talk link
+     * @param string $roomName Optional room name for the email subject
+     * @param string $message Optional custom message to include
+     * @return DataResponse
+     */
+    #[NoAdminRequired]
+    public function sendEmail(string $email = '', string $link = '', string $roomName = '', string $message = ''): DataResponse
+    {
+        $email = trim($email);
+        $link = trim($link);
+
+        if (empty($email)) {
+            return new DataResponse(
+                ['error' => 'Email address is required.'],
+                Http::STATUS_BAD_REQUEST
+            );
+        }
+
+        if (empty($link)) {
+            return new DataResponse(
+                ['error' => 'Link is required.'],
+                Http::STATUS_BAD_REQUEST
+            );
+        }
+
+        $roomNameParam = !empty($roomName) ? $roomName : null;
+        $messageParam = !empty($message) ? $message : null;
+
+        $result = $this->federatedLinkService->sendLinkByEmail($email, $link, $roomNameParam, $messageParam);
+
+        if (!$result['success']) {
+            return new DataResponse(
+                ['error' => $result['error']],
+                Http::STATUS_INTERNAL_SERVER_ERROR
+            );
+        }
+
+        return new DataResponse([
+            'message' => $result['message'],
+        ]);
+    }
 }

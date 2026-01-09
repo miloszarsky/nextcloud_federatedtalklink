@@ -19,6 +19,7 @@ use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCP\AppFramework\Http\Events\BeforeTemplateRenderedEvent;
 use OCP\Http\Client\IClientService;
 use OCP\IConfig;
+use OCP\Mail\IMailer;
 use OCP\Security\ICrypto;
 use Psr\Log\LoggerInterface;
 
@@ -54,7 +55,8 @@ class Application extends App implements IBootstrap
             return new FederatedLinkService(
                 $c->get(SettingsService::class),
                 $c->get(IClientService::class),
-                $c->get(LoggerInterface::class)
+                $c->get(LoggerInterface::class),
+                $c->get(IMailer::class)
             );
         });
 
