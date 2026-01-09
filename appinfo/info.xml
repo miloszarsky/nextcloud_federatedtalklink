@@ -27,7 +27,7 @@ This app allows you to generate federated links to Nextcloud Talk rooms hosted o
 
 Once configured, you can generate federated links by providing the room name. The app will query the external server and return a direct link to the call.
     ]]></description>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
     <licence>agpl</licence>
     <author mail="admin@example.com">Your Name</author>
     <namespace>FederatedTalkLink</namespace>
