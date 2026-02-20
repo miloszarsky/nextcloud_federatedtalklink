@@ -328,7 +328,7 @@ function showLinkDialog(link, roomName) {
                     padding: 10px 16px;
                     border: none;
                     border-radius: 6px;
-                    background: var(--color-success, #46ba61);
+                    background: #46ba61;
                     color: white;
                     cursor: pointer;
                     font-weight: 500;
