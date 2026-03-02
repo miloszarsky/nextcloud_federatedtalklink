@@ -10,6 +10,8 @@ declare(strict_types=1);
 namespace OCA\FederatedTalkLink\Service;
 
 use OCP\Http\Client\IClientService;
+use OCP\IUser;
+use OCP\IUserSession;
 use OCP\Mail\IMailer;
 use Psr\Log\LoggerInterface;
 
@@ -29,7 +31,8 @@ class FederatedLinkService
         private SettingsService $settingsService,
         private IClientService $clientService,
         private LoggerInterface $logger,
-        private IMailer $mailer
+        private IMailer $mailer,
+        private IUserSession $userSession
     ) {
     }
 
@@ -753,6 +756,18 @@ class FederatedLinkService
 
         try {
             $mailMessage = $this->mailer->createMessage();
+
+            $user = $this->userSession->getUser();
+            $userEmail = $user instanceof IUser ? trim((string)$user->getEMailAddress()) : '';
+            if ($userEmail !== '' && filter_var($userEmail, FILTER_VALIDATE_EMAIL)) {
+                $userDisplayName = $user->getDisplayName();
+                if (method_exists($mailMessage, 'setFrom')) {
+                    $mailMessage->setFrom([$userEmail => $userDisplayName]);
+                }
+                if (method_exists($mailMessage, 'setReplyTo')) {
+                    $mailMessage->setReplyTo([$userEmail => $userDisplayName]);
+                }
+            }
 
             // Set recipient
             $mailMessage->setTo([$email]);

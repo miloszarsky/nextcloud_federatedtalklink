@@ -19,6 +19,7 @@ use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCP\AppFramework\Http\Events\BeforeTemplateRenderedEvent;
 use OCP\Http\Client\IClientService;
 use OCP\IConfig;
+use OCP\IUserSession;
 use OCP\Mail\IMailer;
 use OCP\Security\ICrypto;
 use Psr\Log\LoggerInterface;
@@ -56,7 +57,8 @@ class Application extends App implements IBootstrap
                 $c->get(SettingsService::class),
                 $c->get(IClientService::class),
                 $c->get(LoggerInterface::class),
-                $c->get(IMailer::class)
+                $c->get(IMailer::class),
+                $c->get(IUserSession::class)
             );
         });
 
